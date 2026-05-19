@@ -1,0 +1,178 @@
+[
+  {
+    "name": "Aarav Patel",
+    "email": "aarav.patel@techcorp.in",
+    "status": "New",
+    "source": "Website",
+    "notes": "Visited the pricing page 3 times. Interested in the enterprise plan.",
+    "createdAt": { "$date": "2025-04-01T08:30:00.000Z" }
+  },
+  {
+    "name": "Sneha Kapoor",
+    "email": "sneha.k@designstudio.com",
+    "status": "New",
+    "source": "Instagram",
+    "notes": "DM'd us via Instagram after seeing the reel. Wants a demo call.",
+    "createdAt": { "$date": "2025-04-03T10:15:00.000Z" }
+  },
+  {
+    "name": "Vikram Nair",
+    "email": "vikram@startupventures.io",
+    "status": "New",
+    "source": "Referral",
+    "notes": "Referred by Ananya Singh. Looking for CRM for 15-person team.",
+    "createdAt": { "$date": "2025-04-05T09:00:00.000Z" }
+  },
+  {
+    "name": "Meera Joshi",
+    "email": "meera.joshi@ecommercehub.com",
+    "status": "New",
+    "source": "Website",
+    "notes": "Downloaded the whitepaper. Follow up in 2 days.",
+    "createdAt": { "$date": "2025-04-06T11:45:00.000Z" }
+  },
+  {
+    "name": "Kabir Malhotra",
+    "email": "kabir@malhotragroup.co",
+    "status": "New",
+    "source": "Instagram",
+    "notes": "Commented on sponsored post. Mid-sized textile business.",
+    "createdAt": { "$date": "2025-04-07T14:20:00.000Z" }
+  },
+  {
+    "name": "Tara Singh",
+    "email": "tara.singh@freelance.dev",
+    "status": "New",
+    "source": "Referral",
+    "notes": "Freelancer expanding her team. Needs 5 seats.",
+    "createdAt": { "$date": "2025-04-08T16:00:00.000Z" }
+  },
+  {
+    "name": "Rahul Verma",
+    "email": "rahul.verma@fintech.in",
+    "status": "Contacted",
+    "source": "Website",
+    "notes": "Called on Monday. Very interested. Sent pricing deck. Awaiting reply.",
+    "createdAt": { "$date": "2025-04-02T09:30:00.000Z" }
+  },
+  {
+    "name": "Ananya Iyer",
+    "email": "ananya@iyer-consulting.com",
+    "status": "Contacted",
+    "source": "Referral",
+    "notes": "Had a 30-min intro call. Evaluating 3 other tools. Check back next week.",
+    "createdAt": { "$date": "2025-04-04T13:00:00.000Z" }
+  },
+  {
+    "name": "Siddharth Rao",
+    "email": "sidd.rao@cloudworks.io",
+    "status": "Contacted",
+    "source": "Instagram",
+    "notes": "Replied to DM. Scheduled demo for Friday 3pm.",
+    "createdAt": { "$date": "2025-04-09T10:00:00.000Z" }
+  },
+  {
+    "name": "Nisha Gupta",
+    "email": "nisha@guptaretail.com",
+    "status": "Contacted",
+    "source": "Website",
+    "notes": "Email opened 4 times. No reply yet. Try WhatsApp.",
+    "createdAt": { "$date": "2025-04-10T08:00:00.000Z" }
+  },
+  {
+    "name": "Aryan Khanna",
+    "email": "aryan.khanna@mediagroup.in",
+    "status": "Contacted",
+    "source": "Referral",
+    "notes": "Intro call done. Needs approval from CFO. Timeline: 2 weeks.",
+    "createdAt": { "$date": "2025-04-11T15:30:00.000Z" }
+  },
+  {
+    "name": "Divya Menon",
+    "email": "divya@menon-architecture.com",
+    "status": "Contacted",
+    "source": "Website",
+    "notes": "Architecture firm. 8 employees. Contacted via email sequence.",
+    "createdAt": { "$date": "2025-04-12T11:00:00.000Z" }
+  },
+  {
+    "name": "Aditya Bansal",
+    "email": "aditya@bansaltech.com",
+    "status": "Qualified",
+    "source": "Referral",
+    "notes": "Budget confirmed Rs2L/year. Decision maker in the call. Proposal sent.",
+    "createdAt": { "$date": "2025-03-20T09:00:00.000Z" }
+  },
+  {
+    "name": "Kavya Reddy",
+    "email": "kavya.reddy@healthplus.in",
+    "status": "Qualified",
+    "source": "Website",
+    "notes": "Healthcare startup. 40 users. Legal reviewing contract. Close expected Friday.",
+    "createdAt": { "$date": "2025-03-22T10:30:00.000Z" }
+  },
+  {
+    "name": "Ishaan Sharma",
+    "email": "ishaan@sharmalogistics.com",
+    "status": "Qualified",
+    "source": "Instagram",
+    "notes": "Logistics company. Ready to sign. Needs custom onboarding package.",
+    "createdAt": { "$date": "2025-03-25T14:00:00.000Z" }
+  },
+  {
+    "name": "Pooja Choudhary",
+    "email": "pooja.c@edutechplatform.io",
+    "status": "Qualified",
+    "source": "Referral",
+    "notes": "EdTech platform. 200+ users needed. Negotiating annual pricing.",
+    "createdAt": { "$date": "2025-03-28T16:45:00.000Z" }
+  },
+  {
+    "name": "Manav Kapoor",
+    "email": "manav@kapoorinfra.co",
+    "status": "Qualified",
+    "source": "Website",
+    "notes": "Infrastructure firm. Big deal — Rs5L ARR. Final call with CEO next Tuesday.",
+    "createdAt": { "$date": "2025-03-30T09:15:00.000Z" }
+  },
+  {
+    "name": "Ritu Agarwal",
+    "email": "ritu@agarwaltextiles.com",
+    "status": "Lost",
+    "source": "Instagram",
+    "notes": "Went with a competitor. Cheaper pricing was the reason. Revisit in 6 months.",
+    "createdAt": { "$date": "2025-03-01T10:00:00.000Z" }
+  },
+  {
+    "name": "Shiv Kumar",
+    "email": "shiv.kumar@oldschoolbiz.com",
+    "status": "Lost",
+    "source": "Referral",
+    "notes": "Not tech-savvy. Decided to stick with Excel. Not a fit right now.",
+    "createdAt": { "$date": "2025-03-05T11:30:00.000Z" }
+  },
+  {
+    "name": "Preethi Nambiar",
+    "email": "preethi@nambiarconsult.in",
+    "status": "Lost",
+    "source": "Website",
+    "notes": "Budget cut. Project put on hold until Q3. Keep warm.",
+    "createdAt": { "$date": "2025-03-10T13:00:00.000Z" }
+  },
+  {
+    "name": "Gaurav Sinha",
+    "email": "gaurav@sinhaenterprises.com",
+    "status": "Lost",
+    "source": "Instagram",
+    "notes": "No response after 4 follow-ups. Marking as lost. Try again in 3 months.",
+    "createdAt": { "$date": "2025-03-12T09:45:00.000Z" }
+  },
+  {
+    "name": "Falak Mirza",
+    "email": "falak@mirzadesigns.in",
+    "status": "Lost",
+    "source": "Referral",
+    "notes": "Chose in-house solution. Lost to build-vs-buy decision.",
+    "createdAt": { "$date": "2025-03-15T15:00:00.000Z" }
+  }
+]
