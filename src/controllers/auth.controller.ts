@@ -1,118 +1,101 @@
-import { Request, Response } from 'express';
-import { User } from '../models/User';
-import {
-  generateAccessToken,
-  generateRefreshToken,
-  verifyRefreshToken,
-} from '../utils/jwt';
-import { sendSuccess, sendError } from '../utils/response';
-import { IUserPayload } from '../types';
+import express from 'express';
+import cors from 'cors';
+import helmet from 'helmet';
+import compression from 'compression';
+import morgan from 'morgan';
+import rateLimit from 'express-rate-limit';
 
-export const register = async (req: Request, res: Response): Promise<void> => {
-  const { name, email, password, role } = req.body as {
-    name: string;
-    email: string;
-    password: string;
-    role?: 'admin' | 'sales';
-  };
+import { config } from './config';
+import { logger } from './utils/logger';
+import { errorHandler, notFound } from './middleware/errorHandler';
+import authRoutes from './routes/auth.routes';
+import leadRoutes from './routes/lead.routes';
 
-  const existingUser = await User.findOne({ email });
-  if (existingUser) {
-    sendError(res, 'Email already registered', 409);
-    return;
-  }
+const app = express();
 
-  const user = await User.create({ name, email, password, role });
+// Security
+app.use(helmet());
+app.use(
+  cors({
+    origin: config.cors.origin,
+    credentials: true,
+    methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  })
+);
 
-  const payload: IUserPayload = {
-    id: user._id.toString(),
-    email: user.email,
-    role: user.role,
-  };
+// Rate limiting
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { success: false, message: 'Too many requests, please try again later' },
+});
+app.use('/api/', limiter);
 
-  const accessToken = generateAccessToken(payload);
-  const refreshToken = generateRefreshToken(payload);
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  message: { success: false, message: 'Too many auth attempts' },
+});
 
-  sendSuccess(
-    res,
-    {
-      user: { id: user._id, name: user.name, email: user.email, role: user.role },
-      accessToken,
-      refreshToken,
-    },
-    'Registration successful',
-    201
+// Body parsing
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true }));
+app.use(compression());
+
+// Logging
+if (config.nodeEnv !== 'test') {
+  app.use(
+    morgan('combined', {
+      stream: { write: (message: string) => logger.info(message.trim()) },
+    })
   );
-};
+}
 
-export const login = async (req: Request, res: Response): Promise<void> => {
-  const { email, password } = req.body as { email: string; password: string };
+// Health check
+app.get('/health', (_req: import('express').Request, res: import('express').Response) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString(), env: config.nodeEnv });
+});
 
-  const user = await User.findOne({ email, isActive: true }).select('+password');
-  if (!user) {
-    sendError(res, 'Invalid email or password', 401);
-    return;
-  }
+// Routes
+app.use('/api/auth', authLimiter, authRoutes);
+app.use('/api/leads', leadRoutes);
 
-  const isMatch = await user.comparePassword(password);
-  if (!isMatch) {
-    sendError(res, 'Invalid email or password', 401);
-    return;
-  }
-
-  const payload: IUserPayload = {
-    id: user._id.toString(),
-    email: user.email,
-    role: user.role,
-  };
-
-  const accessToken = generateAccessToken(payload);
-  const refreshToken = generateRefreshToken(payload);
-
-  sendSuccess(res, {
-    user: { id: user._id, name: user.name, email: user.email, role: user.role },
-    accessToken,
-    refreshToken,
-  }, 'Login successful');
-};
-
-export const refreshToken = async (req: Request, res: Response): Promise<void> => {
-  const { refreshToken: token } = req.body as { refreshToken: string };
-
-  if (!token) {
-    sendError(res, 'Refresh token required', 400);
-    return;
-  }
-
+// Temporary seed route - remove after seeding
+app.post('/api/seed', async (_req: import('express').Request, res: import('express').Response) => {
   try {
-    const decoded = verifyRefreshToken(token);
-    const user = await User.findById(decoded.id);
+    const { User } = await import('./models/User');
+    const { Lead } = await import('./models/Lead');
 
-    if (!user || !user.isActive) {
-      sendError(res, 'Invalid refresh token', 401);
-      return;
-    }
+    await User.deleteMany({});
+    await Lead.deleteMany({});
 
-    const payload: IUserPayload = {
-      id: user._id.toString(),
-      email: user.email,
-      role: user.role,
-    };
+    const admin = await User.create({ name: 'Arjun Mehta', email: 'admin@gigflow.dev', password: 'Admin@1234', role: 'admin', isActive: true });
+    const sales1 = await User.create({ name: 'Priya Sharma', email: 'priya@gigflow.dev', password: 'Sales@1234', role: 'sales', isActive: true });
+    const sales2 = await User.create({ name: 'Rohan Das', email: 'rohan@gigflow.dev', password: 'Sales@1234', role: 'sales', isActive: true });
 
-    const accessToken = generateAccessToken(payload);
-    const newRefreshToken = generateRefreshToken(payload);
+    await Lead.insertMany([
+      { name: 'Aarav Patel', email: 'aarav@techcorp.in', status: 'New', source: 'Website', notes: 'Interested in enterprise plan', createdBy: admin._id },
+      { name: 'Sneha Kapoor', email: 'sneha@design.com', status: 'New', source: 'Instagram', notes: 'Wants a demo call', createdBy: sales1._id },
+      { name: 'Vikram Nair', email: 'vikram@startup.io', status: 'New', source: 'Referral', notes: 'Looking for CRM', createdBy: sales2._id },
+      { name: 'Rahul Verma', email: 'rahul@fintech.in', status: 'Contacted', source: 'Website', notes: 'Sent pricing deck', createdBy: sales1._id },
+      { name: 'Ananya Iyer', email: 'ananya@consulting.com', status: 'Contacted', source: 'Referral', notes: 'Evaluating tools', createdBy: sales2._id },
+      { name: 'Aditya Bansal', email: 'aditya@bansaltech.com', status: 'Qualified', source: 'Referral', notes: 'Budget confirmed', createdBy: admin._id },
+      { name: 'Kavya Reddy', email: 'kavya@health.in', status: 'Qualified', source: 'Website', notes: 'Contract under review', createdBy: sales1._id },
+      { name: 'Ritu Agarwal', email: 'ritu@textiles.com', status: 'Lost', source: 'Instagram', notes: 'Went with competitor', createdBy: sales2._id },
+      { name: 'Shiv Kumar', email: 'shiv@oldschool.com', status: 'Lost', source: 'Referral', notes: 'Sticking with Excel', createdBy: admin._id },
+    ]);
 
-    sendSuccess(res, { accessToken, refreshToken: newRefreshToken }, 'Token refreshed');
-  } catch {
-    sendError(res, 'Invalid or expired refresh token', 401);
+    res.json({ success: true, message: 'Seeded successfully' });
+  } catch (err) {
+    res.status(500).json({ success: false, error: String(err) });
   }
-};
+});
 
-export const getMe = async (req: Request, res: Response): Promise<void> => {
-  const user = await User.findById(req.user?.id);
-  if (!user) {
-    sendError(res, 'User not found', 404);
-    return;
-  }
-  sendSuccess(res, user, 'User profile retrieved');
-};
+// 404 & Error handlers
+app.use(notFound);
+app.use(errorHandler);
+
+export default app;
